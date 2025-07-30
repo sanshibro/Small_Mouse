@@ -99,8 +99,8 @@ volatile bool g_test_mode_active = false;
 static volatile TestMovementState g_test_state = TEST_STATE_IDLE;   // 空闲
 static uint32_t g_test_reps_remaining = 0;
 static uint32_t g_test_move_start_time = 0;
-static int g_test_start_nod = 0, g_test_start_shake = 0, g_test_start_tail = 0; // 新增 tail
-static int g_test_target_nod = 0, g_test_target_shake = 0, g_test_target_tail = 0; // 新增 tail
+static int      g_test_start_nod = 0, g_test_start_shake = 0;
+static int      g_test_target_nod = 0, g_test_target_shake = 0;
 static uint32_t g_test_duration = 1000;
 
 
@@ -1191,19 +1191,9 @@ void Start_Servo_Test(uint8_t axis_mode, int target_nod, int target_shake, uint3
     
     int initial_nod = base_nod_pulse;
     int initial_shake = base_shake_pulse;
-    int initial_tail = base_tail_pulse; // <-- 新增：获取尾部舵机当前位置
-
-       // 根据 axis_mode，智能地调用 Start_Servo_Range_Test
-    if (axis_mode == AXIS_Tail)
-    {
-        // 如果是测试尾部，就把尾部的 "当前位置" 和 "目标位置" 传到 nod_A 和 nod_B 参数里
-        Start_Servo_Range_Test(axis_mode, initial_tail, target_nod, initial_shake, target_shake, duration_ms, repetitions);
-    }
-    else
-    {
-        // 如果是测试头部（点头、摇头、或两者），则使用原始逻辑
-        Start_Servo_Range_Test(axis_mode, initial_nod, target_nod, initial_shake, target_shake, duration_ms, repetitions);
-    }
+    
+    // 调用更通用的“区间测试”启动函数，其中A点为当前位置
+    Start_Servo_Range_Test(axis_mode, initial_nod, target_nod, initial_shake, target_shake, duration_ms, repetitions);
 }
 
 /**
@@ -1231,16 +1221,7 @@ void Start_Servo_Range_Test(uint8_t axis_mode, int nod_A, int nod_B, int shake_A
     }
     else if (axis_mode == AXIS_Tail){
         
-   // 当只测试尾部舵机时，头部舵机保持不动
-        g_test_start_nod = base_nod_pulse;
-        g_test_target_nod = base_nod_pulse;
-        g_test_start_shake = base_shake_pulse;
-        g_test_target_shake = base_shake_pulse;
 
-        // 设置尾部舵机的测试范围 (A点和B点)
-        // 注意：我们需要复用传进来的 nod_A 和 nod_B 参数来传递尾部舵机的位置
-        g_test_start_tail = nod_A;
-        g_test_target_tail = nod_B;
 
 
 
@@ -1280,25 +1261,20 @@ void Execute_Test_Movement(void)
         progress = (float)time_in_step / (float)current_duration;
     }
 
-    int from_nod, to_nod, from_shake, to_shake, from_tail, to_tail;
+    int from_nod, to_nod, from_shake, to_shake;
+
     switch(g_test_state) {
         case TEST_STATE_PREPARE:
             from_nod = base_nod_pulse; to_nod = g_test_start_nod;
             from_shake = base_shake_pulse; to_shake = g_test_start_shake;
-            from_tail = base_tail_pulse; to_tail = g_test_start_tail; // 新增
-
             break;
         case TEST_STATE_FORWARD:
             from_nod = g_test_start_nod; to_nod = g_test_target_nod;
             from_shake = g_test_start_shake; to_shake = g_test_target_shake;
-            from_tail = g_test_start_tail; to_tail = g_test_target_tail; // 新增
-
             break;
         case TEST_STATE_RETURN:
             from_nod = g_test_target_nod; to_nod = g_test_start_nod;
             from_shake = g_test_target_shake; to_shake = g_test_start_shake;
-            from_tail = g_test_target_tail; to_tail = g_test_start_tail; // 新增
-
             break;
         default: return;
     }
@@ -1322,16 +1298,12 @@ void Execute_Test_Movement(void)
     float eased_progress = easeOutCubic(progress);
     int current_nod = (int)(from_nod + (to_nod - from_nod) * eased_progress);
     int current_shake = (int)(from_shake + (to_shake - from_shake) * eased_progress);
-    int current_tail = (int)(from_tail + (to_tail - from_tail) * eased_progress); // 新增
 
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, current_nod);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, current_shake);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, current_tail); // 新增：假设使用 TIM15 CH1
-   
     base_nod_pulse = current_nod;
     base_shake_pulse = current_shake;
-    base_tail_pulse = current_tail;
-
+    
     if (g_test_state == TEST_STATE_IDLE) {
         g_test_mode_active = false;
         char str[64];
@@ -1596,8 +1568,6 @@ int main(void)
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-
   HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
   
@@ -1741,5 +1711,4 @@ void assert_failed(uint8_t *file, uint32_t line)
 
 
 
-/* USER CODE END 0 */
 
