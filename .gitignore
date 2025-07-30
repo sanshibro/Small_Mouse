@@ -1,22 +1,31 @@
-# Keil MDK-ARM 生成文件
-*.axf
-*.uvoptx
-*.uvprojx
-*.uvguix.*
-*.dep
-*.crf
-*.o
-*.d
-*.lst
-*.map
-*.lnp
-*.tmp
-
-# 构建目录
-build/
-RTE/
+# Keil/MDK-ARM specific build outputs
 Objects/
 Listings/
 
-# VSCode 本地配置
+# Keil user-specific settings (these should not be in version control)
+*.uvopt
+*.uvoptx
+*.uvgui.*
+
+# Keil backup files
+*.uvproj.bak
+*.uvprojx.bak
+
+# Debugger scripts and map files
+*.ini
+*.map
+
+# Legacy project files
+*.Uv2
+*.Opt
+*.Plg
+*.Bak
+
+# Other common build output folders
+build/
+
+# Keil Run-Time Environment folder
+RTE/
+
+# VS Code local settings
 .vscode/
