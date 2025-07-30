@@ -77,7 +77,7 @@ void Execute_Breathing_V2(void);
 #define CMD_SET_PAT_THRESHOLD   2
 #define CMD_SERVO_TEST          10 // "从当前位置到目标" 测试
 #define CMD_SERVO_RANGE_TEST    11 // "在A点和B点之间" 测试
-#define CMD_SERVO_TAILeadST      12er  新增：尾部舵机测试指令
+//#define CMD_SERVO_TAILeadST      12er  新增：尾部舵机测试指令
 
 
 #define CMD_PURR_CHANGE 101    //对应呼吸马达1
