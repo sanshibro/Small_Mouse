@@ -1,31 +1,47 @@
-# Keil/MDK-ARM specific build outputs
+# Keil/MDK 相关
 Objects/
 Listings/
-
-# Keil user-specific settings (these should not be in version control)
 *.uvopt
 *.uvoptx
 *.uvgui.*
-
-# Keil backup files
 *.uvproj.bak
 *.uvprojx.bak
-
-# Debugger scripts and map files
 *.ini
 *.map
-
-# Legacy project files
 *.Uv2
 *.Opt
 *.Plg
 *.Bak
-
-# Other common build output folders
 build/
-
-# Keil Run-Time Environment folder
 RTE/
 
-# VS Code local settings
+# CubeMX 生成的冗余文件
+# 编译产物
+Debug/
+Release/
+*.o
+*.hex
+*.bin
+*.elf
+*.d
+*.lst
+
+# IDE 配置（非必要）
+.project
+.cproject
+STM32CubeIDE/
+*.launch
+.settings/
+
+# VS Code 本地配置
 .vscode/
+
+# CubeMX 生成的测试/文档文件
+Drivers/CMSIS/docs/
+Drivers/CMSIS/DSP/DSP_Lib_TestSuite/
+Drivers/STM32*_HAL_Driver/Inc/Legacy/  # 旧版兼容文件（非必要）
+
+# 其他临时文件
+*~
+*.swp
+*.swo
