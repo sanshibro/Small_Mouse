@@ -1,7 +1,7 @@
 # Keil/MDK-ARM specific
 # 忽略编译产生的目标文件和列表文件夹
-/Objects/
-/Listings/
+Objects/
+Listings/
 
 # 忽略Keil的用户自定义设置文件，这些文件因人而异
 *.uvopt
@@ -21,8 +21,8 @@
 *.Bak
 
 # 忽略其他通用编译输出文件夹
-/build/
-/RTE/           # 忽略Keil Run-Time Environment文件夹
+build/
+RTE/           # 忽略Keil Run-Time Environment文件夹
 
 # 忽略VS Code的本地设置
 .vscode/
