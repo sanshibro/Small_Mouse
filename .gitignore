@@ -1,28 +1,22 @@
-# Keil/MDK-ARM specific
-# 忽略编译产生的目标文件和列表文件夹
+# Keil MDK-ARM 生成文件
+*.axf
+*.uvoptx
+*.uvprojx
+*.uvguix.*
+*.dep
+*.crf
+*.o
+*.d
+*.lst
+*.map
+*.lnp
+*.tmp
+
+# 构建目录
+build/
+RTE/
 Objects/
 Listings/
 
-# 忽略Keil的用户自定义设置文件，这些文件因人而异
-*.uvopt
-*.uvoptx
-*.uvgui.*
-*.uvproj.bak
-*.uvprojx.bak
-
-# 忽略调试器脚本文件
-*.ini
-*.map
-
-# 忽略旧版工程文件
-*.Uv2
-*.Opt
-*.Plg
-*.Bak
-
-# 忽略其他通用编译输出文件夹
-build/
-RTE/           # 忽略Keil Run-Time Environment文件夹
-
-# 忽略VS Code的本地设置
+# VSCode 本地配置
 .vscode/
